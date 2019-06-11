@@ -1,0 +1,56 @@
+ title = e1[1].get()
+        author = e2[1].get()
+        description = e3[1].get()
+        acq = e4[1].get()
+        finished = e5[1].get()
+        print(title)
+#    title = vals[0]
+#    author = vals[1]
+#    description= vals[2]
+#    acq = vals[3]
+#    finished = vals[4]   
+        print(title) 
+    try:
+
+        add_employee = ("INSERT INTO books "
+        "(title, author, Description, acq, finished) "
+       "VALUES (%s, %s, %s, %s, %s)")
+        data_employee = (title,author,description, acq, finished)
+
+        cnx = get_connection()
+        cursor = cnx.cursor()
+        cursor.execute(add_employee, data_employee) 
+
+        cnx.commit()
+        print ("Entry committed")
+    except mysql.connector.Error as err:
+        if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+            print("Something is wrong with your user name or password")
+        elif err.errno == errorcode.ER_BAD_DB_ERROR:
+            print("Database does not exist")
+        else:
+            print(err)
+    else:
+        cnx.close()
+
+        
+        
+   from tkinter import *
+
+master = Tk()
+entryb1 = StringVar
+
+Label(master, text="Input: ").grid(row=0, sticky=W)
+
+Entry(master, textvariable=entryb1).grid(row=1, column=1)
+
+b1 = Button(master, text="continue", command=print_content)
+b1.grid(row=2, column=1)
+
+def print_content():
+    global entryb1
+    content = entryb1.get()
+    print(content)
+
+master.mainloop()     
+        

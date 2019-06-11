@@ -1,0 +1,64 @@
+#!/usr/bin/python
+
+import mysql.connector
+from datetime import date, datetime, timedelta
+from mysql.connector import errorcode
+
+_connection = None
+
+
+# Build the loop in Main
+
+
+def get_connection():
+	global _connection
+	if not _connection:
+		_connection = mysql.connector.connect(user='jposenau',
+        database='mine',
+        password = 'Dadrules503',
+        host = '127.0.0.1' )
+	return _connection        
+    
+def entry(t,a,d,stat):
+# Build the entry string and push to db   
+	today = datetime.now().date()
+
+    try:
+
+        add_employee = ("INSERT INTO books "
+                   "(title, author, Description, finished) "
+                   "VALUES (%s, %s, %s, %s )")
+        data_employee = (t,a,d, stat)
+
+        cnx = get_connection()
+        cursor = cnx.cursor()
+        num_rows = cursor.execute(add_employee, data_employee) 
+
+        cnx.commit()
+    except mysql.connector.Error as err:
+        if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+            print("Something is wrong with your user name or password")
+        elif err.errno == errorcode.ER_BAD_DB_ERROR:
+             print("Database does not exist")
+        else:
+            print(err)
+    else:
+        cnx.close()
+
+def main():
+    # my code here
+
+    go = 1
+    while (go ==1):
+    
+        title = input("Enter Title ")
+        author = input("Enter Author")
+        description = input("Brief Description")
+        stat = input("have you finished it?")
+    
+        entry(title,author,description,stat)
+        go = input("1 to continue 0 to stop")
+
+if __name__== "__main__":
+  main()
+
